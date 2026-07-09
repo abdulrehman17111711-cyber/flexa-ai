@@ -6,7 +6,7 @@ st.write("Hello! How can I help you?")
 
 # Key ko permanent save karne ke liye settings
 if "saved_api_key" not in st.session_state:
-    st.session_state.saved_api_key = "AQ.Ab8RN6K5KaV1WczGydC_9coL3sYu-I8ndd_Txt0k-iwPsPLbLw"
+    st.session_state.saved_api_key = "AQ.Ab8RN6J0ufS93KuZy40mRAgsDOnUUFpOuGVfKLXcexw-bagRvw"
 
 # Agar pehle se key enter ki hui hai to query param se utha lo
 if not st.session_state.saved_api_key and "key" in st.query_params:
