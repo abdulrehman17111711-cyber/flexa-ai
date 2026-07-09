@@ -8,17 +8,11 @@ st.write("Welcome! How can I help you ?")
 if "saved_api_key" not in st.session_state:
     st.session_state.saved_api_key = "AQ.Ab8RN6K5KaV1WczGydC_9coL3sYu-I8ndd_Txt0k-iwPsPLbLw"
 
-# Agar pehle se key enter ki hui hai to query param se utha lo
-if not st.session_state.saved_api_key and "key" in st.query_params:
-    st.session_state.saved_api_key = st.query_params["key"]
-
-# Agar key nahi hai to input box dikhao
-if not st.session_state.saved_api_key:
-    api_key_input = st.text_input("Apni Gemini API Key yahan enter krain:", type="password")
-    if api_key_input:
-        st.session_state.saved_api_key = api_key_input
-        st.query_params["key"] = api_key_input
-        st.rerun()
+# --- API KEY SETTING ---
+# Inverted commas "" ke andar apni QP... wali key paste kar dain
+if "saved_api_key" not in st.session_state or not st.session_state.saved_api_key:
+    st.session_state.saved_api_key = "YAHAN_APNI_QP_WALI_KEY_PASTE_KRAIN"
+# -----------------------
 
 # Jab key mil jaye to chatbot shuru karo
 if st.session_state.saved_api_key:
@@ -32,15 +26,19 @@ if st.session_state.saved_api_key:
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
-        if prompt := st.chat_input(" Ask flexa a question..."):
+        if prompt := st.chat_input("Ask flexa a question..."):
             with st.chat_message("user"):
                 st.markdown(prompt)
             st.session_state.messages.append({"role": "user", "content": prompt})
 
             with st.chat_message("assistant"):
+                # Alexa ke dimaag mein aap ka naam daal diya hai
                 response = client.models.generate_content(
                     model='gemini-2.5-flash',
                     contents=prompt,
+                    config={
+                        'system_instruction': 'Aap ka naam Flexa hai. Aap aik AI assistant hain jise Abdul Rehman ne develop kiya hai. Jab bhi koi poochay ke aap ko kis ne banaya ya develop kiya, to hamesha proud hokar Abdul Rehman ka naam batayein.'
+                    }
                 )
                 st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
@@ -49,7 +47,6 @@ if st.session_state.saved_api_key:
         st.error("API Key mein koi masla hai. Meharbani kar ke check krain.")
         if st.button("Key Dubara Enter Krain"):
             st.session_state.saved_api_key = ""
-            st.query_params.clear()
             st.rerun()
 else:
     st.warning("Meharbani kr k pehle apni Gemini API Key enter krain taake Alexa kaam kr skay.")
