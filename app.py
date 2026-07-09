@@ -8,6 +8,7 @@ st.write("Welcome! How can I help you?.")
 # Gemini Free API Key input box
 api_key = st.text_input("Apni Gemini API Key yahan enter krain:", type="password")
 
+
 if api_key:
     client = genai.Client(api_key=api_key)
 
@@ -31,5 +32,5 @@ if api_key:
             st.markdown(response.text)
         st.session_state.messages.append({"role": "assistant", "content": response.text})
 else:
-    st.warning("Meharbani kr k pehle apni Gemini API Key enter krain taake Alexa kaam kr skay.")
+    st.warning("Meharbani kr k pehle apni Gemini API Key enter krain taake flexa kaam kr skay.")
     
