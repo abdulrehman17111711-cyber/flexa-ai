@@ -1,14 +1,15 @@
 import streamlit as st
 from google import genai
 
-st.title(" Flexa AI ")
-st.write("Welcome! How can I help you today?.")
+# App ki screen pr upar naam badal diya hai
+st.title("Flexa AI Chatbot")
+st.write("Welcome! Main aap ki har tarah se madad krne k liye tayyar hoon.")
 
-# YAHAN APNI KEY PASTE KRAIN (Inverted commas ke andar)
-ASLI_API_KEY = "AQ.Ab8RN6K5KaV1WczGydC_9coL3sYu-I8ndd_Txt0k-iwPsPLbLw"
+# Gemini Free API Key input box
+api_key = st.text_input("AQ.Ab8RN6K5KaV1WczGydC_9coL3sYu-I8ndd_Txt0k-iwPsPLbLw", type="password")
 
-try:
-    client = genai.Client(api_key=ASLI_API_KEY)
+if api_key:
+    client = genai.Client(api_key=api_key)
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -17,7 +18,7 @@ try:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    if prompt := st.chat_input("Ask flexa a question..."):
+    if prompt := st.chat_input("Alexa se kuch bhi poochein..."):
         with st.chat_message("user"):
             st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
@@ -26,13 +27,9 @@ try:
             response = client.models.generate_content(
                 model='gemini-2.5-flash',
                 contents=prompt,
-                config={
-                    'system_instruction': 'Aap ka naam Alexa hai. Aap aik AI assistant hain jise Abdul Rehman ne develop kiya hai. Jab bhi koi poochay ke aap ko kis ne banaya ya develop kiya, to hamesha proud hokar Abdul Rehman ka naam batayein.'
-                }
             )
             st.markdown(response.text)
         st.session_state.messages.append({"role": "assistant", "content": response.text})
-        
-except Exception as e:
-    st.error("API Key mein koi masla hai. Meharbani kar ke check krain.")
+else:
+    st.warning("Meharbani kr k pehle apni Gemini API Key enter krain taake Alexa kaam kr skay.")
     
